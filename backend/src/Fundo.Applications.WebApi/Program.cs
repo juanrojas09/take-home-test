@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using System;
+using Fundo.Applications.WebApi.Extensions;
 
 namespace Fundo.Applications.WebApi
 {
@@ -10,7 +11,11 @@ namespace Fundo.Applications.WebApi
         {
             try
             {
-                CreateWebHostBuilder(args).Build().Run();
+                var host = CreateWebHostBuilder(args).Build();
+                host.Services.InitializeDatabase();
+                
+            
+                host.Run();
             }
             catch (Exception ex)
             {
