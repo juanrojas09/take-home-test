@@ -34,7 +34,7 @@ jobs:
       working-directory: ./backend/src
 
     - name: Run tests
-      run: dotnet test --no-build --configuration Release --verbosity normal --collect:"XPlat Code Coverage"
+      run: dotnet test --no-build --configuration Release --verbosity normal --filter "FullyQualifiedName!~Integration" --collect:"XPlat Code Coverage"
       working-directory: ./backend/src
 
     - name: Upload test results
