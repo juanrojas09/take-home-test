@@ -27,15 +27,15 @@ jobs:
 
     - name: Restore dependencies
       run: dotnet restore
-      working-directory: ./backend
+      working-directory: ./backend/src
 
     - name: Build
       run: dotnet build --no-restore --configuration Release
-      working-directory: ./backend
+      working-directory: ./backend/src
 
     - name: Run tests
       run: dotnet test --no-build --configuration Release --verbosity normal --collect:"XPlat Code Coverage"
-      working-directory: ./backend
+      working-directory: ./backend/src
 
     - name: Upload test results
       if: always()
