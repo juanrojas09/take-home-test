@@ -9,6 +9,7 @@ using Fundo.Applications.Domain.Exceptions;
 using Fundo.Applications.Domain.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using FluentValidation;
 
 namespace Fundo.Applications.Application.UseCases.LoansOperations.Commands;
 
@@ -16,8 +17,10 @@ public record LoanPaymentRequestDto(int LoanId,decimal Amount);
 public record CreateLoanPaymentCommand(LoanPaymentRequestDto RequestDto) :IRequest<Response<LoanDto>>;
 public class CreateLoanPaymentHandler(
     IQuerySqlDb<Loans> loanQuerySqlDb,
-    ICommandSqlDb<Loans> loanCommandSqlDb
-    ,IContextService contextService,ILogger<CreateLoanPaymentHandler> logger ):IRequestHandler<CreateLoanPaymentCommand,Response<LoanDto>>
+    ICommandSqlDb<Loans> loanCommandSqlDb,
+    IContextService contextService,
+    ILogger<CreateLoanPaymentHandler> logger,
+    IValidator<LoanPaymentRequestDto> validator):IRequestHandler<CreateLoanPaymentCommand,Response<LoanDto>>
 {
     public async Task<Response<LoanDto>> Handle(CreateLoanPaymentCommand request, CancellationToken cancellationToken)
     {
@@ -57,7 +60,6 @@ public class CreateLoanPaymentHandler(
     private async Task<List<string>> ValidateRequest(LoanPaymentRequestDto requestDto, CancellationToken cancellationToken)
     {
         logger.LogInformation("Validating loan payment request for LoanId: {LoanId} with Amount: {Amount}", requestDto.LoanId, requestDto.Amount);
-        var validator = new CreateLoanPaymentValidator(loanQuerySqlDb,contextService);
         var result = await validator.ValidateAsync(requestDto, cancellationToken);
         return result.IsValid
             ? new List<string>()

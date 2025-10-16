@@ -1,4 +1,5 @@
-﻿using Fundo.Applications.Apllication.Interfaces;
+﻿using FluentValidation;
+using Fundo.Applications.Apllication.Interfaces;
 using Fundo.Applications.Apllication.Validators;
 using Fundo.Applications.Domain.Common;
 using Fundo.Applications.Domain.Entities;
@@ -11,11 +12,13 @@ namespace Fundo.Applications.Application.UseCases.LoansOperations.Queries;
 
 public record GetLoanByIdQuery(int LoanId):IRequest<Response<Loans>>;
 
-public class GetLoanByIdQueryHandler(ILogger<GetLoanByIdQueryHandler> logger,IContextService contextService,IQuerySqlDb<Loans> loanQuerySqlDb):IRequestHandler<GetLoanByIdQuery, Response<Loans>>
+public class GetLoanByIdQueryHandler(ILogger<GetLoanByIdQueryHandler> logger,IContextService contextService,IQuerySqlDb<Loans> loanQuerySqlDb,
+    IValidator<int> validator
+    ):IRequestHandler<GetLoanByIdQuery, Response<Loans>>
 {
     public async Task<Response<Loans>> Handle(GetLoanByIdQuery request, CancellationToken cancellationToken)
     {
-        var validator= new GetLoanByIdValidator(contextService,loanQuerySqlDb);
+       
         var validationResult = await validator.ValidateAsync(request.LoanId, cancellationToken);
         if (!validationResult.IsValid)
         {
