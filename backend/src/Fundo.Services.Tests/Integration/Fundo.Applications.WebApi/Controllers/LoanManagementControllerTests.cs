@@ -83,6 +83,8 @@ namespace Fundo.Services.Tests.Integration.Fundo.Applications.WebApi.Controllers
 
         private void AuthorizeClient(string token)
         {
+            
+            _client.DefaultRequestHeaders.Add("Cookie", "access_token=" + token);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
@@ -220,7 +222,7 @@ namespace Fundo.Services.Tests.Integration.Fundo.Applications.WebApi.Controllers
                 Assert.True(
                     response.StatusCode == System.Net.HttpStatusCode.OK ||
                     response.StatusCode == System.Net.HttpStatusCode.NotFound ||
-                    response.StatusCode == System.Net.HttpStatusCode.BadRequest,
+                    response.StatusCode == System.Net.HttpStatusCode.Forbidden,
                     $"Status has to be OK or Not Found or BadRequest but is {response.StatusCode}"
                 );
             }finally

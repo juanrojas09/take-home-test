@@ -1,0 +1,115 @@
+<div class="loans-container">
+
+  <header class="loans-header">
+    <h1>Loan Management</h1>
+    <h2 *ngIf="userRole()">Admin</h2>
+    <button class="logout-button" (click)="logout()">
+      <span>Logout</span>
+    </button>
+  </header>
+
+
+  <div class="error-banner" *ngIf="errorMessage()">
+    {{ errorMessage() }}
+  </div>
+
+
+  <div class="loading-container" *ngIf="isLoading()">
+
+    <p>Loading loans...</p>
+  </div>
+
+  <div class="table-container" *ngIf="!isLoading()">
+    <table class="loans-table">
+      <thead>
+        <tr>
+          <th>Loan Amount</th>
+          <th>Current Balance</th>
+          <th>Applicant</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let loan of loans()" class="table-row">
+          <td data-label="Loan Amount">
+            {{ loan.loanAmount || loan.currentBalance | currency }}
+          </td>
+          <td data-label="Current Balance">
+            {{ loan.currentBalance | currency }}
+          </td>
+          <td data-label="Applicant">
+            {{ loan.applicant.fullName }}
+          </td>
+          <td data-label="Status">
+            <span [class]="getStatusClass(loan.status)" class="status-badge">
+              {{ loan.status.toLowerCase() }}
+            </span>
+          </td>
+        </tr>
+
+
+        <tr *ngIf="loans().length === 0">
+          <td colspan="4" class="empty-state">
+            No se encontraron préstamos
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <div class="pagination-wrapper" *ngIf="!isLoading() && hasLoans()">
+    <div class="pagination-info">
+      Showing {{ paginationInfo().start }} -
+      {{ paginationInfo().end }} of {{ paginationInfo().total }} loans
+      <span class="page-indicator">(Page {{ currentPage() }} of {{ totalPages() }})</span>
+    </div>
+
+    <div class="pagination">
+      <button
+        class="page-button"
+        (click)="previousPage()"
+        [disabled]="currentPage() === 1"
+      >
+        ‹ Previous
+      </button>
+
+      <button
+        *ngIf="totalPages() > 1 && visiblePages()[0] > 1"
+        class="page-button"
+        (click)="goToPage(1)"
+      >
+        1
+      </button>
+
+      <span *ngIf="totalPages() > 1 && visiblePages()[0] > 2" class="dots">...</span>
+
+      <button
+        *ngFor="let page of visiblePages()"
+        class="page-button"
+        [class.active]="page === currentPage()"
+        (click)="goToPage(page)"
+      >
+        {{ page }}
+      </button>
+
+      <span *ngIf="totalPages() > 1 && visiblePages()[visiblePages().length - 1] < totalPages() - 1" class="dots">...</span>
+
+      <button
+        *ngIf="totalPages() > 1 && visiblePages()[visiblePages().length - 1] < totalPages()"
+        class="page-button"
+        (click)="goToPage(totalPages())"
+      >
+        {{ totalPages() }}
+      </button>
+
+      <button
+        class="page-button"
+        (click)="nextPage()"
+        [disabled]="currentPage() === totalPages()"
+      >
+        Next ›
+      </button>
+    </div>
+  </div>
+</div>

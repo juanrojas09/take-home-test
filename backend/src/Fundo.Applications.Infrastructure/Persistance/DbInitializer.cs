@@ -97,16 +97,16 @@ namespace Fundo.Applications.Infrastructure.Persistance
                 Users.CreateNew(
                     "admin@fundo.com", 
                     BCrypt.Net.BCrypt.HashPassword("Admin123!"), 
-                    "Admin", 
-                    "User", 
+                    "Juan", 
+                    "Roittman", 
                     adminRoleId
                 ),
        
                 Users.CreateNew(
                     "user1@fundo.com", 
                     BCrypt.Net.BCrypt.HashPassword("User123!"), 
-                    "Normal", 
-                    "User One", 
+                    "John", 
+                    "Rojas", 
                     userRoleId
                 ),
                 
@@ -114,8 +114,8 @@ namespace Fundo.Applications.Infrastructure.Persistance
                 Users.CreateNew(
                     "user2@fundo.com", 
                     BCrypt.Net.BCrypt.HashPassword("User123!"), 
-                    "Regular", 
-                    "User Two", 
+                    "Pedro", 
+                    "Perez", 
                     userRoleId
                 )
             };

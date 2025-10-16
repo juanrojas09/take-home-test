@@ -1,18 +1,14 @@
 ﻿#!/bin/bash
 
-# Iniciar SQL Server en segundo plano
 /opt/mssql/bin/sqlservr &
 
 
-
-
-echo 'Ejecutando script de inicializacion de base de datos...'
 /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $SA_PASSWORD -C -d master -i /init-db.sql
 
 if [ $? -eq 0 ]; then
-  echo 'Base de datos inicializada correctamente'
+  echo 'Database init successfully'
 else
-  echo 'Error al inicializar la base de datos'
+  echo 'Error initializating db'
 fi
 
 wait
