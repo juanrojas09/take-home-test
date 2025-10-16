@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Reflection;
 using System.Text.Json.Serialization;
-using Fundo.Applications.Apllication.Bootstrap;
+
 using Fundo.Applications.Infrastructure.Bootstrap;
 using Fundo.Applications.WebApi.Middlewares;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +12,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Fundo.Applications.Application.Bootstrap;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Fundo.Applications.WebApi
 {
@@ -25,12 +29,19 @@ namespace Fundo.Applications.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+    
             services.AddEndpointsApiExplorer();
             services.AddApplicationServices();
+            
+          
+            services.AddExceptionHandler<GlobalExceptionHandler>();
+            services.AddProblemDetails();
+            
             services.AddTransient<AuthenticationMiddleware>();
-            services.AddTransient<GlobalExceptionHandler>();
+          
             services.AddInfrastructure(Configuration);
             services.AddSwaggerServices();
+
             
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -59,6 +70,9 @@ namespace Fundo.Applications.WebApi
         {
           
             Console.WriteLine($">>> Environment: {env.EnvironmentName}");
+            
+            // Habilitar el manejador global de excepciones al inicio del pipeline
+            app.UseExceptionHandler();
             
             app.UseCors(builder =>
             {

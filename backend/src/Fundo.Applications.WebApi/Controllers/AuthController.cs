@@ -1,9 +1,9 @@
 using Fundo.Applications.Apllication.UseCases.Authentication.Commands;
-using Fundo.Applications.Apllication.UseCases.Authentication.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Fundo.Applications.Application.UseCases.Authentication.Queries;
 
 namespace Fundo.Applications.WebApi.Controllers
 {

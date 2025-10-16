@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Fundo.Applications.Apllication.Dtos;
-using Fundo.Applications.Apllication.UseCases.LoansOperations.Queries.GetLoans;
-using Fundo.Applications.Apllication.UseCases.LoansOperations.Queries;
-using Fundo.Applications.Apllication.UseCases.LoansOperations.Commands;
+
+
+
+using Fundo.Applications.Application.UseCases.LoansOperations.Commands;
+using Fundo.Applications.Application.UseCases.LoansOperations.Queries;
+using Fundo.Applications.Application.UseCases.LoansOperations.Queries.GetLoans;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 
@@ -71,8 +74,9 @@ namespace Fundo.Applications.WebApi.Controllers
         }
         
         [HttpPost("{id}/payment")]
-        public async Task<IActionResult> MakePayment(int id, [FromBody] LoanPaymentRequestDto requestDto)
+        public async Task<IActionResult> MakePayment([FromRoute] int id, [FromBody] LoanPaymentRequestDto requestDto)
         {
+            requestDto = requestDto with { LoanId = id };
             var result = await _mediator.Send(new CreateLoanPaymentCommand(requestDto));
             
             if (result.IsSuccess)

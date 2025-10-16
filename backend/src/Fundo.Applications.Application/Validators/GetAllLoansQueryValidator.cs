@@ -1,11 +1,8 @@
 ﻿using FluentValidation;
 using Fundo.Applications.Apllication.Interfaces;
-using Fundo.Applications.Apllication.UseCases.LoansOperations.Queries;
-using Fundo.Applications.Apllication.UseCases.LoansOperations.Queries.GetLoans;
-using Fundo.Applications.Domain.Entities;
-using Fundo.Applications.Domain.Interfaces;
+using Fundo.Applications.Application.UseCases.LoansOperations.Queries.GetLoans;
 
-namespace Fundo.Applications.Apllication.Validators;
+namespace Fundo.Applications.Application.Validators;
 
 public class GetAllLoansQueryValidator:AbstractValidator<GetAllLoansQuery>
 {

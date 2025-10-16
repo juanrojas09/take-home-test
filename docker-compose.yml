@@ -1,0 +1,48 @@
+#api,mongo db y sql server
+
+version: '3.8'
+services:
+  api:
+    build: ./backend
+    ports:
+      - "5001:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MongoDbSettings__ConnectionString=mongodb://mongo:27017
+      - MongoDbSettings__DatabaseName=FundoDb
+      - MongoDbSettings__Collections__Payments=Payments
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=loandb;User Id=sa;Password=Root1234;TrustServerCertificate=True;
+      - JWT__Key=huev.rojas.lt.jwt.challenge.loan.fundop.open.fullstack
+      - JWT__Issuer=huev.rojas.lt
+      - JWT__Audience=huev.rojas.lt
+      - JWT__ExpireTime=200
+    depends_on:
+      - mongo
+      - sqlserver
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver
+    environment:
+      SA_PASSWORD: "Root1234"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+      - ./init-db.sql:/init-db.sql
+      - ./init-sqlserver.sh:/init-sqlserver.sh
+    command: bash /init-sqlserver.sh
+
+volumes:
+  mongo-data:
+  sqlserver-data:

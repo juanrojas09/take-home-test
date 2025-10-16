@@ -1,5 +1,4 @@
-﻿using Fundo.Applications.Apllication.Dtos;
-using Fundo.Applications.Apllication.Interfaces;
+﻿using Fundo.Applications.Apllication.Interfaces;
 using Fundo.Applications.Apllication.Validators;
 using Fundo.Applications.Domain.Common;
 using Fundo.Applications.Domain.Entities;
@@ -7,7 +6,7 @@ using Fundo.Applications.Domain.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Fundo.Applications.Apllication.UseCases.LoansOperations.Queries;
+namespace Fundo.Applications.Application.UseCases.LoansOperations.Queries;
 
 
 public record GetLoanByIdQuery(int LoanId):IRequest<Response<Loans>>;
@@ -17,7 +16,7 @@ public class GetLoanByIdQueryHandler(ILogger<GetLoanByIdQueryHandler> logger,ICo
     public async Task<Response<Loans>> Handle(GetLoanByIdQuery request, CancellationToken cancellationToken)
     {
         var validator= new GetLoanByIdValidator(contextService,loanQuerySqlDb);
-        var validationResult=validator.Validate(request.LoanId);
+        var validationResult = await validator.ValidateAsync(request.LoanId, cancellationToken);
         if (!validationResult.IsValid)
         {
             logger.LogError("There are validation errors for the GetLoanByIdQuery: {Errors}",string.Join(", ",validationResult.Errors.Select(e=>e.ErrorMessage)));

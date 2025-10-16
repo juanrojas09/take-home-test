@@ -92,6 +92,7 @@ namespace Fundo.Applications.Infrastructure.Persistance
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Ignore<Payments>();
             modelBuilder.Ignore<IDomainEvent>();
     
             modelBuilder.Entity<Users>(entity =>
@@ -128,11 +129,7 @@ namespace Fundo.Applications.Infrastructure.Persistance
                 entity.HasKey(e => e.Id);
             });
 
-            modelBuilder.Entity<Payments>(entity =>
-            {
-                // Especificando el tipo de columna para las propiedades decimales
-                entity.Property(e => e.Amount).HasColumnType("decimal(18,2)");
-            });
+    
 
             base.OnModelCreating(modelBuilder);
         }

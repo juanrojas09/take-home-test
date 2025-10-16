@@ -1,10 +1,11 @@
 public async Task<Response<LoanDto>> Handle(CreateLoanCommand request, CancellationToken cancellationToken)
 {
     var validator = new CreateLoanValidator();
-    if(!validator.Validate(request.requestDto).IsValid)
+    var result = await validator.ValidateAsync(request.requestDto, cancellationToken);
+    if(!result.IsValid)
     {
         //return validation errors as JSON
-        var errors = validator.Validate(request.requestDto).Errors.Select(e => e.ErrorMessage).ToList();
+        var errors = result.Errors.Select(e => e.ErrorMessage).ToList();
         return Response<LoanDto>.Fail(errors, "Validation errors occurred");
     }
     

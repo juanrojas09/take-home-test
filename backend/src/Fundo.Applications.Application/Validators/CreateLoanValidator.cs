@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Fundo.Applications.Apllication.UseCases.LoansOperations.Commands;
+using Fundo.Applications.Application.UseCases.LoansOperations.Commands;
 
-namespace Fundo.Applications.Apllication.Validators;
+namespace Fundo.Applications.Application.Validators;
 
 public class CreateLoanValidator:AbstractValidator<LoanRequestDto>
 {

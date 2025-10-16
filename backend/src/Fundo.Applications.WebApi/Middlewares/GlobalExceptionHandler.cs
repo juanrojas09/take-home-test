@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Fundo.Applications.Domain.Common;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -21,6 +22,6 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger):IExc
         httpContext.Response.Headers["TraceId"] = traceId;
         
         
-        return await httpContext.Response.WriteAsJsonAsync(exception.Message, cancellationToken).ContinueWith(_=>true,cancellationToken);
+        return await httpContext.Response.WriteAsJsonAsync(Response<object>.Fail(exception.Message,500), cancellationToken).ContinueWith(_=>true,cancellationToken);
     }
 }

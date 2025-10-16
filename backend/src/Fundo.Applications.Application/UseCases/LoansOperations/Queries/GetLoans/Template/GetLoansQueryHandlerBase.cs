@@ -1,26 +1,37 @@
 ﻿using Fundo.Applications.Apllication.Dtos;
 using Fundo.Applications.Apllication.Interfaces;
+
 using Fundo.Applications.Domain.Common;
 using Fundo.Applications.Domain.Entities;
 using Fundo.Applications.Domain.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Fundo.Applications.Apllication.UseCases.LoansOperations.Queries.GetLoans.Template;
+namespace Fundo.Applications.Application.UseCases.LoansOperations.Queries.GetLoans.Template;
 
 public record GetLoansQueryBase(PaginationRequestDto PaginationRequestDto) : IRequest<Response<Pagination<LoanDto>>>;
 
-public abstract class GetLoansQueryHandlerBase(ILogger<GetLoansQueryHandlerBase>logger,IQuerySqlDb<Loans> loanQuerySqlDb, IContextService contextService)
-    : IRequestHandler<GetLoansQueryBase, Response<Pagination<LoanDto>>>
+public abstract class GetLoansQueryHandlerBase<TRequest> : IRequestHandler<TRequest, Response<Pagination<LoanDto>>>
+    where TRequest : GetLoansQueryBase
 {
+    protected readonly ILogger<GetLoansQueryHandlerBase<TRequest>> logger;
+    protected readonly IQuerySqlDb<Loans> loanQuerySqlDb;
+    protected readonly IContextService contextService;
+
+    protected GetLoansQueryHandlerBase(
+        ILogger<GetLoansQueryHandlerBase<TRequest>> logger,
+        IQuerySqlDb<Loans> loanQuerySqlDb, 
+        IContextService contextService)
+    {
+        this.logger = logger;
+        this.loanQuerySqlDb = loanQuerySqlDb;
+        this.contextService = contextService;
+    }
 
     /// <summary>
     /// Fetch all user loans with pagination.
     /// </summary>
-    /// <param name="request"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public async Task<Response<Pagination<LoanDto>>> Handle(GetLoansQueryBase request, CancellationToken cancellationToken)
+    public async Task<Response<Pagination<LoanDto>>> Handle(TRequest request, CancellationToken cancellationToken)
     {
         var page = request.PaginationRequestDto.PageNumber;
         var pageSize = request.PaginationRequestDto.PageSize;
@@ -78,7 +89,7 @@ public abstract class GetLoansQueryHandlerBase(ILogger<GetLoansQueryHandlerBase>
             .ToList();
     }
 
-    private async Task<Pagination<LoanDto>> BuildPaginationAsync(List<LoanDto> items, int page, int pageSize, CancellationToken cancellationToken)
+    internal virtual async Task<Pagination<LoanDto>> BuildPaginationAsync(List<LoanDto> items, int page, int pageSize, CancellationToken cancellationToken)
     {
         var total = await loanQuerySqlDb.CountAsync(x => true, cancellationToken);
         return new Pagination<LoanDto>
@@ -90,6 +101,5 @@ public abstract class GetLoansQueryHandlerBase(ILogger<GetLoansQueryHandlerBase>
         };
     }
     #endregion
-
 
 }

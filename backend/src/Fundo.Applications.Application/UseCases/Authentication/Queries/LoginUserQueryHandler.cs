@@ -1,10 +1,11 @@
-﻿using Fundo.Applications.Domain.Common;
+﻿using Fundo.Applications.Apllication.Dtos;
+using Fundo.Applications.Domain.Common;
 using Fundo.Applications.Domain.Entities;
 using Fundo.Applications.Domain.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 
-namespace Fundo.Applications.Apllication.UseCases.Authentication.Queries;
+namespace Fundo.Applications.Application.UseCases.Authentication.Queries;
 
 public record LoginUserDto(string Email, string Password);
 
@@ -18,25 +19,27 @@ public class LoginUserQueryHandler(IQuerySqlDb<Users> userRepository,IConfigurat
     {
        
        
-            var user = await userRepository.FirstOrDefaultAsNoTrackingAsync(x => x.Email == request.LoginUserDto.Email,false,x=>x.Role);
-            if (user == null)
-            {
-                return Response<LoginUserResponseDto>.NotFound("The user with the provided email does not exist.");
-            }
+        var user = await userRepository.FirstOrDefaultAsNoTrackingAsync(x => x.Email == request.LoginUserDto.Email,false,x=>x.Role);
+        if (user == null)
+        {
+            return Response<LoginUserResponseDto>.NotFound("The user with the provided email does not exist.");
+        }
 
 
-            if (!Users.ValidateLoginPassword(request.LoginUserDto.Password, user.Password))
-            {
-                return Response<LoginUserResponseDto>.Forbidden("Invalid Credentials.");
-            }
+        if (!Users.ValidateLoginPassword(request.LoginUserDto.Password, user.Password))
+        {
+            return Response<LoginUserResponseDto>.Forbidden("Invalid Credentials.");
+        }
 
-            var secretKey = configuration.GetSection("JWT")["Key"];
-            var jwt = Jwt.GenerateJwt(user, secretKey!);
-            return Response<LoginUserResponseDto>.Success(new LoginUserResponseDto(jwt), "Login exitoso");
+        var secretKey = configuration.GetSection("JWT")["Key"];
+        var jwt = Jwt.GenerateJwt(user, secretKey!);
+        return Response<LoginUserResponseDto>.Success(new LoginUserResponseDto(jwt), "Successfull login");
         
 
 
     }
+    
+
 
 
 }

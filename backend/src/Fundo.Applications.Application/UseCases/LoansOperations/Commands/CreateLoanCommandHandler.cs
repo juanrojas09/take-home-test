@@ -1,15 +1,14 @@
 ﻿using Fundo.Applications.Apllication.Dtos;
 using Fundo.Applications.Apllication.Interfaces;
 using Fundo.Applications.Apllication.Validators;
+using Fundo.Applications.Application.Validators;
 using Fundo.Applications.Domain.Common;
 using Fundo.Applications.Domain.Entities;
 using Fundo.Applications.Domain.Enums;
-using Fundo.Applications.Domain.Exceptions;
 using Fundo.Applications.Domain.Interfaces;
 using MediatR;
 
-namespace Fundo.Applications.Apllication.UseCases.LoansOperations.Commands;
-//apply vertical slice on handlers and query to bring balance on file number and lines of code
+namespace Fundo.Applications.Application.UseCases.LoansOperations.Commands;
 
 public record LoanRequestDto(decimal Amount);
 public record CreateLoanCommand(LoanRequestDto requestDto) : IRequest<Response<LoanDto>>;
@@ -26,7 +25,7 @@ public class CreateLoanCommandHandler(ICommandSqlDb<Loans> loanCommandSqlDb,ICon
     public async Task<Response<LoanDto>> Handle(CreateLoanCommand request, CancellationToken cancellationToken)
     {
         
-        var errors = ValidateRequest(request.requestDto);
+        var errors =await  ValidateRequest(request.requestDto);
         if (errors.Any())
             return Response<LoanDto>.Fail(errors, "Validation errors occurred");
 
@@ -52,16 +51,16 @@ public class CreateLoanCommandHandler(ICommandSqlDb<Loans> loanCommandSqlDb,ICon
     
     
     
-    private List<string> ValidateRequest(LoanRequestDto requestDto)
+    private  async Task<List<string>> ValidateRequest(LoanRequestDto requestDto)
     {
         var validator = new CreateLoanValidator();
-        var result = validator.Validate(requestDto);
+        var result = await validator.ValidateAsync(requestDto);
         return result.IsValid ? new List<string>() : result.Errors.Select(e => e.ErrorMessage).ToList();
     }
     
   
     private Loans MapToEntity(CreateLoanCommand request, int userId)
     {
-       return Loans.CreateNew(request.requestDto.Amount,(int)userId);
+        return Loans.CreateNew(request.requestDto.Amount,(int)userId);
     }
 }

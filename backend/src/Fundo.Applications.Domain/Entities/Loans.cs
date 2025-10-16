@@ -4,6 +4,7 @@ using Fundo.Applications.Domain.Enums;
 
 namespace Fundo.Applications.Domain.Entities;
 
+[Table("loans")]
 public class Loans : Entity<int>
 {
     [Column("amount")]

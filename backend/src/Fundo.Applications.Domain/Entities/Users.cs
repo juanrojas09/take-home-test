@@ -24,6 +24,7 @@ public class Users : Entity<int>
     [Column("role_id")]
     public int RoleId { get; private set; }
 
+    
 
     protected Users() { }
 
