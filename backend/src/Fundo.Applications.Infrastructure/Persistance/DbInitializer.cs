@@ -108,7 +108,6 @@ namespace Fundo.Applications.Infrastructure.Persistance
                     "John", 
                     "Rojas", 
                     userRoleId
-                    
                 ),
                 
             
