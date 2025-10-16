@@ -27,7 +27,6 @@ A full-stack loan management application built with .NET Core 8 and Angular 18.
 3. **Access the application:**
    - Frontend: http://localhost:4200
    - Backend API: http://localhost:5001
-   - Swagger Docs: http://localhost:5000/swagger
 
 4. **Login credentials:**
    
@@ -77,6 +76,7 @@ Frontend App runs on http://localhost:4200
 
 ### Authentication
 - `POST /api/auth/login` - User login
+
 
 ### Loans
 - `GET /api/loans` - List all loans (Admin only)
@@ -159,3 +159,41 @@ docker-compose ps
 ---
 
 Built with .NET Core 8 & Angular 18
+
+---
+
+## 📌 Implementation Notes
+
+### Future Enhancements
+
+Due to time constraints, the following features were not implemented but the infrastructure is already in place:
+
+**Event Sourcing with MongoDB:**
+- The backend is fully configured to work with domain events
+- MongoDB service is included in the Docker orchestration
+- Intended implementation: Log payment events using Event Sourcing pattern in MongoDB
+- Domain events like `LoanPaymentEvent` would be captured and stored in a decoupled manner
+- All necessary backend infrastructure for MongoDB integration is ready
+
+**Environment Variables & Secrets Management:**
+- Production environment should use secure secret management
+- Recommended approach: Azure Key Vault or similar services for sensitive configuration
+- Current implementation uses environment variables for development purposes
+
+**Next Steps:**
+- Implement domain event handlers for loan payment tracking
+- Integrate MongoDB for event sourcing persistence
+- Configure Azure Key Vault for production secrets
+- Add comprehensive logging and monitoring
+
+### Implemented Features
+
+**Authentication & Authorization:**
+- JWT-based authentication system with HttpOnly cookies for enhanced security
+- Role-based access control implementation (Admin/User roles)
+- Dynamic endpoint routing based on user roles:
+  - **Admin users**: Access to all loans via `/api/loans` endpoint
+  - **Regular users**: Access only to their own loans via `/api/loans/my` endpoint
+- Token validation and refresh mechanism
+- Frontend interceptors for automatic token handling
+- Secure session management with dual storage approach (cookies + sessionStorage)
