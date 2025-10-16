@@ -24,11 +24,18 @@ A full-stack loan management application built with .NET Core 8 and Angular 18.
    docker-compose up -d
    ```
 
-3. **Access the application:**
+3. **Start the frontend development server:**
+   ```bash
+   cd frontend
+   ng serve -o
+   ```
+   This will automatically open your browser at http://localhost:4200
+
+4. **Access the application:**
    - Frontend: http://localhost:4200
    - Backend API: http://localhost:5001
 
-4. **Login credentials:**
+5. **Login credentials:**
    
    **Admin:**
    ```
@@ -42,7 +49,7 @@ A full-stack loan management application built with .NET Core 8 and Angular 18.
    Password: User123!
    ```
 
-5. **Stop services:**
+6. **Stop services:**
    ```bash
    docker-compose down
    ```
